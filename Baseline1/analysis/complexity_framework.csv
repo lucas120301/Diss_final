@@ -1,0 +1,7 @@
+Market Characteristic,US Indices Score (1-5),Indian Metals Score (1-5),Optimal Model Complexity
+Market Efficiency,5,3,Low efficiency → Complex models
+Asset Diversification,5,1,Low diversification → Complex models
+Information Flow Speed,5,3,Slow information → Complex models
+Liquidity Level,5,2,Low liquidity → Complex models
+Regulatory Maturity,5,3,Weak regulation → Complex models
+Volatility Clustering,3,5,Strong clustering → Complex models

@@ -1,0 +1,30 @@
+{
+  "total_predictions": 9,
+  "assets": [
+    "SPX Index",
+    "RTY Index",
+    "NDX Index"
+  ],
+  "windows": [
+    5,
+    11,
+    22
+  ],
+  "viable_regimes": [
+    0,
+    2,
+    3,
+    4
+  ],
+  "prediction_files": [
+    "regime_switching_SPX_Index_win5.csv",
+    "regime_switching_SPX_Index_win11.csv",
+    "regime_switching_SPX_Index_win22.csv",
+    "regime_switching_RTY_Index_win5.csv",
+    "regime_switching_RTY_Index_win11.csv",
+    "regime_switching_RTY_Index_win22.csv",
+    "regime_switching_NDX_Index_win5.csv",
+    "regime_switching_NDX_Index_win11.csv",
+    "regime_switching_NDX_Index_win22.csv"
+  ]
+}

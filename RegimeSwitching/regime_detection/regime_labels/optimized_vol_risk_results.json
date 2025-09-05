@@ -1,0 +1,35 @@
+{
+  "methodology": "optimized_vol_risk_17_feature_approach",
+  "silhouette_score": 0.25010431601942246,
+  "cluster_distribution": [
+    1659,
+    26,
+    519,
+    521,
+    552
+  ],
+  "n_features": 13,
+  "feature_names": [
+    "SPX Index_Vol",
+    "RTY Index_Vol",
+    "USGG10yr_Vol",
+    "MOVE_Vol",
+    "SX5E_Vol",
+    "HSI_Vol",
+    "GC1_Vol",
+    "EURUSD_Vol",
+    "Market_Stress",
+    "VIX3M_Level",
+    "MOVE_Level",
+    "SKEW_Level",
+    "VVIX_Level"
+  ],
+  "optimization_strategy": "high_n_init",
+  "random_seed": 1,
+  "comparison": {
+    "original_17_feature": 0.16,
+    "optimized_17_feature": 0.25010431601942246,
+    "improvement": 1.5631519751213903,
+    "vs_optimal_5_feature": 0.574952450619362
+  }
+}

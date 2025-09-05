@@ -1,0 +1,3 @@
+Market Type,Market Development,Asset Diversification,Market Efficiency,Information Flow,Liquidity,Volatility Persistence,Optimal Model
+US Financial Indices (Our Study),Developed,High (Index of 500+ stocks),High,"Real-time, global",Very High,Moderate,Simple (Single GARCH-LSTM)
+Indian Metal Commodities (Original Paper),Emerging,Low (Single commodity),Moderate,"Regional, delayed",Moderate,High,Complex (Triple GARCH-LSTM)

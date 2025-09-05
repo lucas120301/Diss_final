@@ -1,0 +1,45 @@
+CLUSTERING VALIDATION SUMMARY
+==================================================
+Date: 2025-09-05 05:27:26
+Data: /Users/user/Desktop/Imperial/Diss_final/softRegimeSwitching/terminal data 1_cleaned.csv
+Regimes: 5
+Features: 33
+Observations: 3193
+
+METHODS TESTED:
+--------------------
+1. kmeans_inverse_distance
+2. kmeans_exponential_decay
+3. kmeans_gaussian_kernel
+4. kmeans_softmax_distance
+5. kmeans_power_distance
+6. gmm_full
+7. gmm_tied
+8. gmm_diag
+9. gmm_spherical
+
+TOP 3 METHODS:
+--------------------
+1. kmeans_gaussian_kernel (Score: 0.463)
+2. gmm_spherical (Score: 0.450)
+3. kmeans_softmax_distance (Score: 0.405)
+
+RECOMMENDED METHOD:
+--------------------
+Method: kmeans_gaussian_kernel
+Overall Score: 0.463
+Quality Score: 0.241
+Stability Score: 0.796
+Silhouette Score: 0.138
+Avg Max Probability: 0.946
+High Confidence %: 94.1%
+
+FILES GENERATED:
+--------------------
+• method_comparison.csv - Full comparison table
+• best_soft_probabilities.csv - Recommended soft probabilities
+• best_hard_labels.csv - Hard regime assignments
+• validation_metadata.json - Complete validation details
+• method_comparison_heatmap.png - Visual comparison
+• top_methods_detailed.png - Top 3 methods analysis
+• best_method_analysis.png - Best method detailed analysis

@@ -1,0 +1,7 @@
+asset,methodology,confidence_level,var_type,total_regimes,violation_rate,expected_rate,violations_count,total_observations,uc_statistic,uc_pvalue,cc_statistic,cc_pvalue,violation_severity,var_mean,var_std
+SPX Index,corrected_regime_fhs_baseline1,0.01,VaR_1,combined,0.0,0.01,0,608,-12.221208397857763,1.0,,,0.0,-0.05635483479323973,0.012009565634304224
+SPX Index,corrected_regime_fhs_baseline1,0.05,VaR_5,combined,0.001644736842105263,0.05,1,608,53.44281980896614,2.6623148130511254e-13,,,-0.002216823926604116,-0.04,0.009138482705841139
+RTY Index,corrected_regime_fhs_baseline1,0.01,VaR_1,combined,0.0,0.01,0,541,-10.87446339348857,1.0,,,0.0,-0.059577028497076655,0.01013996913457563
+RTY Index,corrected_regime_fhs_baseline1,0.05,VaR_5,combined,0.0036968576709796672,0.05,2,541,40.88341489424115,1.6158663296295117e-10,,,-0.005335222664255887,-0.04,0.006100810857010193
+NDX Index,corrected_regime_fhs_baseline1,0.01,VaR_1,combined,0.0,0.01,0,608,-12.221208397857763,1.0,,,0.0,-0.0582839307764232,0.012213322477215717
+NDX Index,corrected_regime_fhs_baseline1,0.05,VaR_5,combined,0.004934210526315789,0.05,3,608,42.18473132872786,8.30459034872888e-11,,,-0.00419368274774634,-0.04,0.0087437020840353

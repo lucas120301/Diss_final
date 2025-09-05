@@ -1,0 +1,342 @@
+{
+  "validation_date": "2025-09-05T05:27:26.041409",
+  "data_path": "/Users/user/Desktop/Imperial/Diss_final/softRegimeSwitching/terminal data 1_cleaned.csv",
+  "n_regimes": 5,
+  "random_state": 42,
+  "feature_count": 33,
+  "observation_count": 3193,
+  "methods_tested": [
+    "kmeans_inverse_distance",
+    "kmeans_exponential_decay",
+    "kmeans_gaussian_kernel",
+    "kmeans_softmax_distance",
+    "kmeans_power_distance",
+    "gmm_full",
+    "gmm_tied",
+    "gmm_diag",
+    "gmm_spherical"
+  ],
+  "best_method": "kmeans_gaussian_kernel",
+  "feature_names": [
+    "SPX Index_RV22",
+    "SPX Index_EWMA",
+    "RTY Index_RV22",
+    "RTY Index_EWMA",
+    "NDX Index_RV22",
+    "NDX Index_EWMA",
+    "VIX_RV22",
+    "VIX_EWMA",
+    "MOVE_RV22",
+    "MOVE_EWMA",
+    "SX5E_RV22",
+    "SX5E_EWMA",
+    "HSI_RV22",
+    "HSI_EWMA",
+    "Market_Stress",
+    "VIX_Level",
+    "VIX_Change",
+    "MOVE_Level",
+    "MOVE_Change",
+    "SKEW_Level",
+    "SKEW_Change",
+    "vvix_Level",
+    "vvix_Change",
+    "GVZ_Level",
+    "GVZ_Change",
+    "OVX_Level",
+    "OVX_Change",
+    "Equity_Corr",
+    "Stock_Bond_Corr",
+    "SPX Index_Mom22",
+    "RTY Index_Mom22",
+    "NDX Index_Mom22",
+    "Equity_Dispersion"
+  ],
+  "method_details": {
+    "kmeans_inverse_distance": {
+      "method_type": "kmeans",
+      "evaluation_metrics": {
+        "silhouette_score": 0.13792815054705698,
+        "calinski_harabasz_score": 540.5263819591954,
+        "davies_bouldin_score": 1.9607006218277891,
+        "avg_entropy": 1.48605490577146,
+        "entropy_ratio": 0.9233378276295002,
+        "avg_max_probability": 0.32601808211790784,
+        "high_confidence_pct": 0.0,
+        "medium_confidence_pct": 0.0,
+        "regime_balance": 0.7914011913962752,
+        "regime_switch_rate": 0.08894456623864704,
+        "inertia": 62786.86845562497,
+        "regime_counts": [
+          1547,
+          32,
+          575,
+          680,
+          359
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 32,
+        "largest_regime_size": 1547
+      },
+      "config": {
+        "description": "Inverse distance weighting: 1/(1+d)",
+        "temperature": 1.0
+      },
+      "aic": null,
+      "bic": null,
+      "log_likelihood": null
+    },
+    "kmeans_exponential_decay": {
+      "method_type": "kmeans",
+      "evaluation_metrics": {
+        "silhouette_score": 0.13792815054705698,
+        "calinski_harabasz_score": 540.5263819591954,
+        "davies_bouldin_score": 1.9607006218277891,
+        "avg_entropy": 0.8570759371275207,
+        "entropy_ratio": 0.5325312213077461,
+        "avg_max_probability": 0.6677890068737626,
+        "high_confidence_pct": 0.471656749138741,
+        "medium_confidence_pct": 0.8211713122455371,
+        "regime_balance": 0.7914011913962752,
+        "regime_switch_rate": 0.08894456623864704,
+        "inertia": 62786.86845562497,
+        "regime_counts": [
+          1547,
+          32,
+          575,
+          680,
+          359
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 32,
+        "largest_regime_size": 1547
+      },
+      "config": {
+        "description": "Exponential decay: exp(-T*d)",
+        "temperature": 1.0
+      },
+      "aic": null,
+      "bic": null,
+      "log_likelihood": null
+    },
+    "kmeans_gaussian_kernel": {
+      "method_type": "kmeans",
+      "evaluation_metrics": {
+        "silhouette_score": 0.13792815054705698,
+        "calinski_harabasz_score": 540.5263819591954,
+        "davies_bouldin_score": 1.9607006218277891,
+        "avg_entropy": 0.1511622921550995,
+        "entropy_ratio": 0.09392241290406968,
+        "avg_max_probability": 0.945571234151351,
+        "high_confidence_pct": 0.9408080175383652,
+        "medium_confidence_pct": 0.9962417788913248,
+        "regime_balance": 0.7914011913962752,
+        "regime_switch_rate": 0.08894456623864704,
+        "inertia": 62786.86845562497,
+        "regime_counts": [
+          1547,
+          32,
+          575,
+          680,
+          359
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 32,
+        "largest_regime_size": 1547
+      },
+      "config": {
+        "description": "Gaussian kernel: exp(-0.5*(d/T)^2)",
+        "temperature": 1.0
+      },
+      "aic": null,
+      "bic": null,
+      "log_likelihood": null
+    },
+    "kmeans_softmax_distance": {
+      "method_type": "kmeans",
+      "evaluation_metrics": {
+        "silhouette_score": 0.13792815054705698,
+        "calinski_harabasz_score": 540.5263819591954,
+        "davies_bouldin_score": 1.9607006218277891,
+        "avg_entropy": 0.4462473707533402,
+        "entropy_ratio": 0.2772690809044255,
+        "avg_max_probability": 0.8392845173451732,
+        "high_confidence_pct": 0.803946132164109,
+        "medium_confidence_pct": 0.9583463827121829,
+        "regime_balance": 0.7914011913962752,
+        "regime_switch_rate": 0.08894456623864704,
+        "inertia": 62786.86845562497,
+        "regime_counts": [
+          1547,
+          32,
+          575,
+          680,
+          359
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 32,
+        "largest_regime_size": 1547
+      },
+      "config": {
+        "description": "Softmax on negative distances: softmax(-T*d)",
+        "temperature": 2.0
+      },
+      "aic": null,
+      "bic": null,
+      "log_likelihood": null
+    },
+    "kmeans_power_distance": {
+      "method_type": "kmeans",
+      "evaluation_metrics": {
+        "silhouette_score": 0.13792815054705698,
+        "calinski_harabasz_score": 540.5263819591954,
+        "davies_bouldin_score": 1.9607006218277891,
+        "avg_entropy": 1.3038446651068383,
+        "entropy_ratio": 0.8101242396700564,
+        "avg_max_probability": 0.4395797589542463,
+        "high_confidence_pct": 0.005324146570623238,
+        "medium_confidence_pct": 0.2815533980582524,
+        "regime_balance": 0.7914011913962752,
+        "regime_switch_rate": 0.08894456623864704,
+        "inertia": 62786.86845562497,
+        "regime_counts": [
+          1547,
+          32,
+          575,
+          680,
+          359
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 32,
+        "largest_regime_size": 1547
+      },
+      "config": {
+        "description": "Power weighting: d^(-T)",
+        "temperature": 2.0
+      },
+      "aic": null,
+      "bic": null,
+      "log_likelihood": null
+    },
+    "gmm_full": {
+      "method_type": "gmm",
+      "evaluation_metrics": {
+        "silhouette_score": 0.06775020339625207,
+        "calinski_harabasz_score": 430.8162363175263,
+        "davies_bouldin_score": 2.6242194134282295,
+        "avg_entropy": 0.02775062707297879,
+        "entropy_ratio": 0.01724243405637747,
+        "avg_max_probability": 0.9896661945285478,
+        "high_confidence_pct": 0.9874725963044159,
+        "medium_confidence_pct": 1.0,
+        "regime_balance": 0.7834696761596041,
+        "regime_switch_rate": 0.04290635765737551,
+        "inertia": 65272.55201288306,
+        "regime_counts": [
+          1503,
+          486,
+          818,
+          32,
+          354
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 32,
+        "largest_regime_size": 1503
+      },
+      "config": {},
+      "aic": 105385.77875277607,
+      "bic": 123434.14070990983,
+      "log_likelihood": -15.5712149628525
+    },
+    "gmm_tied": {
+      "method_type": "gmm",
+      "evaluation_metrics": {
+        "silhouette_score": 0.16360500047733556,
+        "calinski_harabasz_score": 328.1722061529281,
+        "davies_bouldin_score": 2.2755729384845584,
+        "avg_entropy": 0.03146417496418033,
+        "entropy_ratio": 0.019549791092341163,
+        "avg_max_probability": 0.9883615262757934,
+        "high_confidence_pct": 0.9887253366739743,
+        "medium_confidence_pct": 0.9996868149076104,
+        "regime_balance": 1.4083807201937748,
+        "regime_switch_rate": 0.02067021609771375,
+        "inertia": 68661.8122662933,
+        "regime_counts": [
+          2424,
+          116,
+          287,
+          33,
+          333
+        ],
+        "dominant_regime": 0,
+        "smallest_regime_size": 33,
+        "largest_regime_size": 2424
+      },
+      "config": {},
+      "aic": 137830.93151935114,
+      "bic": 142261.09434003293,
+      "log_likelihood": -21.354671393572055
+    },
+    "gmm_diag": {
+      "method_type": "gmm",
+      "evaluation_metrics": {
+        "silhouette_score": 0.053903816941396565,
+        "calinski_harabasz_score": 439.79319023803697,
+        "davies_bouldin_score": 2.55683250486017,
+        "avg_entropy": 0.05668562459088775,
+        "entropy_ratio": 0.035220758845649965,
+        "avg_max_probability": 0.9767988791497579,
+        "high_confidence_pct": 0.970873786407767,
+        "medium_confidence_pct": 1.0,
+        "regime_balance": 0.6756467362454751,
+        "regime_switch_rate": 0.06827435014093329,
+        "inertia": 65925.35644235655,
+        "regime_counts": [
+          866,
+          602,
+          1313,
+          50,
+          362
+        ],
+        "dominant_regime": 2,
+        "smallest_regime_size": 50,
+        "largest_regime_size": 1313
+      },
+      "config": {},
+      "aic": 210926.5550293723,
+      "bic": 212953.50623773906,
+      "log_likelihood": -32.92492249128912
+    },
+    "gmm_spherical": {
+      "method_type": "gmm",
+      "evaluation_metrics": {
+        "silhouette_score": 0.060977560870580656,
+        "calinski_harabasz_score": 423.5603010068715,
+        "davies_bouldin_score": 2.1143097257176366,
+        "avg_entropy": 0.08012843465440209,
+        "entropy_ratio": 0.04978659570235706,
+        "avg_max_probability": 0.9677911846236813,
+        "high_confidence_pct": 0.9614782336360789,
+        "medium_confidence_pct": 0.9987472596304416,
+        "regime_balance": 0.5152876116557712,
+        "regime_switch_rate": 0.08800501096147824,
+        "inertia": 65979.7877723138,
+        "regime_counts": [
+          655,
+          1018,
+          590,
+          56,
+          874
+        ],
+        "dominant_regime": 1,
+        "smallest_regime_size": 56,
+        "largest_regime_size": 1018
+      },
+      "config": {},
+      "aic": 235051.31895300304,
+      "bic": 236107.27557053542,
+      "log_likelihood": -36.75279031522127
+    }
+  }
+}

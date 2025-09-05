@@ -1,0 +1,46 @@
+{
+  "assets_processed": [
+    "SPX Index",
+    "RTY Index",
+    "USGG10yr",
+    "MOVE",
+    "SX5E",
+    "HSI",
+    "GC1",
+    "EURUSD",
+    "vvix",
+    "vix3M",
+    "NAPMPMI",
+    "CPI YOY",
+    "FF1",
+    "GVZ",
+    "USYC2Y10",
+    "SKEW",
+    "CDX HY CDSI GEN 5Y SPRD Corp"
+  ],
+  "individual_files": [
+    "SPX Index_cleaned.csv",
+    "RTY Index_cleaned.csv",
+    "USGG10yr_cleaned.csv",
+    "MOVE_cleaned.csv",
+    "SX5E_cleaned.csv",
+    "HSI_cleaned.csv",
+    "GC1_cleaned.csv",
+    "EURUSD_cleaned.csv",
+    "vvix_cleaned.csv",
+    "vix3M_cleaned.csv",
+    "NAPMPMI_cleaned.csv",
+    "CPI YOY_cleaned.csv",
+    "FF1_cleaned.csv",
+    "GVZ_cleaned.csv",
+    "USYC2Y10_cleaned.csv",
+    "SKEW_cleaned.csv",
+    "CDX HY CDSI GEN 5Y SPRD Corp_cleaned.csv"
+  ],
+  "combined_file": "combined_cleaned.csv",
+  "common_date_range": {
+    "start": "2012-08-09T00:00:00",
+    "end": "2024-12-31T00:00:00",
+    "observations": 3277
+  }
+}
