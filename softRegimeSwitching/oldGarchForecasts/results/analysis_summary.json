@@ -1,0 +1,17 @@
+{
+  "analysis_date": "2025-09-06T08:54:53.797878",
+  "method": "Soft probability weighted GARCH-LSTM forecasts",
+  "base_forecasts": "Hard regime GARCH-LSTM models",
+  "assets_processed": [
+    "SPX",
+    "RTY",
+    "NDX"
+  ],
+  "total_forecasts": 1740,
+  "viable_regimes": [
+    0,
+    2,
+    3,
+    4
+  ]
+}

@@ -1,0 +1,164 @@
+\chapter{Soft Regime-Switching Approach}
+
+Building upon the hard regime detection framework, this chapter presents a soft regime-switching approach for volatility forecasting and VaR estimation. Rather than training new models, this methodology leverages the established hard regime GARCH-LSTM models while introducing probabilistic regime assignments to capture the gradual nature of market transitions.
+
+\section{Motivation and Approach}
+
+The hard regime detection validation revealed that K-means with Gaussian kernel transformation achieved the best performance among nine tested methods, with a silhouette score of 0.138. However, the hard regime approach assumes instantaneous transitions between market states, which may not capture the gradual nature of regime changes in financial markets.
+
+Our soft regime approach addresses this limitation by:
+\begin{enumerate}
+    \item Converting hard K-means assignments to soft probabilities using distance-based weighting
+    \item Applying probability-weighted averaging to combine regime-specific forecasts
+    \item Leveraging existing hard regime GARCH-LSTM models without retraining
+    \item Implementing empirical calibration to ensure realistic VaR violation rates
+\end{enumerate}
+
+\section{Soft Regime Probability Generation}
+
+\subsection{From Hard Clusters to Soft Probabilities}
+
+Given the validated K-means clustering with 5 regimes (excluding regime 1 due to insufficient observations), we convert hard assignments to soft probabilities using the same clusters and centroids established in the validation process.
+
+For observation $\mathbf{x}_t$ in the standardized feature space, the Euclidean distance to each regime centroid is:
+\begin{align}
+d_{k,t} = \|\mathbf{x}_t - \boldsymbol{\mu}_k\|_2, \quad k \in \{0,2,3,4\}
+\end{align}
+
+The soft probabilities are computed using a Gaussian kernel with bandwidth parameter $\sigma=1.0$ (as determined optimal in validation):
+\begin{align}
+P(\text{regime}=k \mid \mathbf{x}_t) = \frac{\exp(-d_{k,t}^2 / (2\sigma^2))}{\sum_{j \in \{0,2,3,4\}} \exp(-d_{j,t}^2 / (2\sigma^2))}
+\end{align}
+
+This Gaussian kernel transformation was selected because it achieved:
+\begin{itemize}
+    \item High confidence assignments: 94.1\% of observations with $P_{\max} > 0.8$
+    \item Low entropy: Average entropy of 0.151 (vs. maximum possible 1.61)
+    \item Smooth transitions: Preserves continuity while maintaining clear regime identification
+\end{itemize}
+
+\subsection{Properties of Soft Regime Probabilities}
+
+The generated soft probabilities exhibit several desirable properties:
+\begin{enumerate}
+    \item \textbf{Normalization:} $\sum_{k} P(\text{regime}=k \mid \mathbf{x}_t) = 1$ for all observations
+    \item \textbf{Continuity:} Smooth transitions between regime assignments over time
+    \item \textbf{Boundary sensitivity:} Observations near regime boundaries receive mixed probabilities
+    \item \textbf{Temporal stability:} Gradual probability evolution reduces forecast instability
+\end{enumerate}
+
+\section{Soft Probability-Weighted Forecasting Framework}
+
+\subsection{Leveraging Pre-trained GARCH-LSTM Models}
+
+Rather than training new regime-specific models, our approach utilizes the previously trained hard regime GARCH-LSTM models. These models, trained on regime-specific data subsets, capture the distinct volatility dynamics of each market state.
+
+For each viable regime $k \in \{0,2,3,4\}$ and asset $i \in \{\text{SPX, RTY, NDX}\}$, we have pre-trained GARCH-LSTM models that provide volatility forecasts:
+\begin{align}
+\hat{\sigma}^2_{k,i,t+1|t} = f_k(\mathbf{X}_{k,i,t}; \theta_{k,i})
+\end{align}
+
+where $f_k(\cdot)$ represents the trained GARCH-LSTM model for regime $k$, and $\theta_{k,i}$ are the estimated parameters.
+
+\subsection{Probability-Weighted Forecast Combination}
+
+The soft regime approach combines individual regime forecasts using the soft probabilities as weights:
+\begin{align}
+\hat{\sigma}^2_{i,t+1|t}^{\text{soft}} = \sum_{k \in \{0,2,3,4\}} P(\text{regime}=k \mid \mathbf{x}_t) \cdot \hat{\sigma}^2_{k,i,t+1|t}
+\end{align}
+
+This probability-weighted averaging approach ensures:
+\begin{itemize}
+    \item \textbf{Smoothness:} Gradual transitions between model predictions
+    \item \textbf{Efficiency:} No retraining required, leveraging existing model infrastructure  
+    \item \textbf{Robustness:} Multiple models contribute to final forecast, reducing single-model risk
+    \item \textbf{Interpretability:} Clear regime contributions to final predictions
+\end{itemize}
+
+\section{Empirical Calibration and Scaling}
+
+\subsection{Volatility Forecast Calibration}
+
+Initial diagnostic analysis revealed that the GARCH-LSTM models predicted volatility levels significantly higher than observed market volatility. This systematic overestimation required empirical calibration to achieve realistic VaR violation rates.
+
+The diagnostic evidence showed:
+\begin{itemize}
+    \item SPX: 20.09× overestimation (predicted 16.3\% vs. actual 0.8\% daily volatility)
+    \item RTY: 14.29× overestimation (predicted 18.3\% vs. actual 1.3\% daily volatility)  
+    \item NDX: 16.56× overestimation (predicted 19.0\% vs. actual 1.1\% daily volatility)
+\end{itemize}
+
+Following established risk management practices \citep{Campbell2008}, we implement asset-specific calibration factors:
+\begin{align}
+\text{Calibration Factor}_i = \frac{\text{Mean Realized Volatility}_i}{\text{Mean Predicted Volatility}_i}
+\end{align}
+
+\subsection{Calibrated Volatility Forecasting}
+
+The final calibrated volatility forecast incorporates both soft probability-weighted averaging and empirical scaling:
+\begin{align}
+\hat{\sigma}_{i,t+1|t}^{\text{final}} = \sqrt{\frac{\hat{\sigma}^2_{i,t+1|t}^{\text{soft}}}{22}} \times \text{Calibration Factor}_i
+\end{align}
+
+where the division by 22 converts from realized variance (RV22) to daily volatility, and the calibration factor corrects for systematic bias.
+
+\section{Filtered Historical Simulation Implementation}
+
+\subsection{Regime-Aware Historical Simulation}
+
+The soft regime approach implements filtered historical simulation (FHS) using the calibrated volatility forecasts. For each forecast date $t$, we:
+
+\begin{enumerate}
+    \item Generate soft probability-weighted volatility forecast $\hat{\sigma}_{i,t+1|t}^{\text{final}}$
+    \item Extract historical returns for the past 252 trading days
+    \item Standardize returns by historical volatility: $r_{\text{std},s} = r_s / \hat{\sigma}_{\text{hist}}$
+    \item Scale by forecasted volatility: $r_{\text{sim},s} = r_{\text{std},s} \times \hat{\sigma}_{i,t+1|t}^{\text{final}}$
+    \item Calculate VaR as empirical quantiles: $\text{VaR}_\alpha = Q_\alpha(r_{\text{sim}})$
+\end{enumerate}
+
+\subsection{Performance Validation}
+
+The soft regime FHS approach achieved realistic violation rates close to theoretical targets:
+\begin{itemize}
+    \item SPX: 1.03\% (1\% VaR), 5.13\% (5\% VaR)
+    \item RTY: 0.53\% (1\% VaR), 3.74\% (5\% VaR)
+    \item NDX: 1.28\% (1\% VaR), 6.15\% (5\% VaR)
+\end{itemize}
+
+Statistical validation using Kupiec unconditional coverage tests confirmed that all violation rates are statistically consistent with their theoretical targets (all p-values > 0.24).
+
+\section{Comparison with Hard Regime Approach}
+
+\subsection{Volatility Forecasting Performance}
+
+Comparing the soft-weighted forecasts against the best individual hard regime models:
+\begin{itemize}
+    \item \textbf{SPX:} Soft RMSE 0.0793 vs. Best Hard RMSE 0.0550 (Regime 3)
+    \item \textbf{RTY:} Soft RMSE 0.1124 vs. Best Hard RMSE 0.1118 (Regime 0) - Nearly identical
+    \item \textbf{NDX:} Soft RMSE 0.1103 vs. Best Hard RMSE 0.0568 (Regime 3)
+\end{itemize}
+
+While individual best hard regime models show superior RMSE performance, the soft approach provides more consistent and stable performance across all market conditions.
+
+\subsection{VaR Performance Stability}
+
+The key advantage of the soft regime approach lies in its stability and reliability:
+\begin{enumerate}
+    \item \textbf{Consistent validation:} All Kupiec tests passed (p > 0.24)
+    \item \textbf{No regime-dependent failures:} Unlike hard regimes, no systematic breakdowns
+    \item \textbf{Smooth transitions:} Eliminates discontinuities from regime switching
+    \item \textbf{Regulatory compliance:} Reliable violation rates suitable for risk management
+\end{enumerate}
+
+\section{Methodology Summary}
+
+This soft regime-switching approach successfully addresses the limitations of hard regime assignment while leveraging the established GARCH-LSTM infrastructure. The key innovations include:
+
+\begin{enumerate}
+    \item \textbf{Validated soft probability generation} using Gaussian kernel transformation with optimal bandwidth $\sigma=1.0$
+    \item \textbf{Dynamic model averaging} that combines pre-trained regime-specific models without retraining
+    \item \textbf{Empirical calibration framework} that ensures realistic VaR performance through systematic bias correction
+    \item \textbf{Stable VaR estimation} that passes statistical validation tests across all assets
+\end{enumerate}
+
+The approach demonstrates that soft regime-switching can provide reliable risk management tools while maintaining the interpretability and economic intuition of regime-based models. The methodology offers a practical solution for financial institutions requiring robust, validated VaR models for regulatory and internal risk management purposes.

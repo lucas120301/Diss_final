@@ -1,0 +1,130 @@
+{
+  "analysis_date": "2025-09-06T09:10:34.838209",
+  "method": "Properly scaled hard regime FHS with GARCH-LSTM forecasts",
+  "calibration_factors": {
+    "SPX Index": 0.049776007964161276,
+    "RTY Index": 0.06997900629811057,
+    "NDX Index": 0.060386473429951695
+  },
+  "regimes_analyzed": [
+    0,
+    2,
+    3,
+    4
+  ],
+  "assets_analyzed": [
+    "SPX Index",
+    "RTY Index",
+    "NDX Index"
+  ],
+  "violation_rates": {
+    "regime_0_SPX_Index": {
+      "regime": 0,
+      "asset": "SPX Index",
+      "1pct_violations": 2.284263959390863,
+      "5pct_violations": 6.852791878172589,
+      "observations": 394,
+      "total_forecasts": 394,
+      "calibration_factor": 0.049776007964161276
+    },
+    "regime_0_RTY_Index": {
+      "regime": 0,
+      "asset": "RTY Index",
+      "1pct_violations": 1.5873015873015872,
+      "5pct_violations": 3.7037037037037033,
+      "observations": 378,
+      "total_forecasts": 378,
+      "calibration_factor": 0.06997900629811057
+    },
+    "regime_0_NDX_Index": {
+      "regime": 0,
+      "asset": "NDX Index",
+      "1pct_violations": 1.5228426395939088,
+      "5pct_violations": 6.598984771573605,
+      "observations": 394,
+      "total_forecasts": 394,
+      "calibration_factor": 0.060386473429951695
+    },
+    "regime_2_SPX_Index": {
+      "regime": 2,
+      "asset": "SPX Index",
+      "1pct_violations": 0.0,
+      "5pct_violations": 2.941176470588235,
+      "observations": 68,
+      "total_forecasts": 68,
+      "calibration_factor": 0.049776007964161276
+    },
+    "regime_2_RTY_Index": {
+      "regime": 2,
+      "asset": "RTY Index",
+      "1pct_violations": 0.0,
+      "5pct_violations": 5.88235294117647,
+      "observations": 51,
+      "total_forecasts": 51,
+      "calibration_factor": 0.06997900629811057
+    },
+    "regime_2_NDX_Index": {
+      "regime": 2,
+      "asset": "NDX Index",
+      "1pct_violations": 0.0,
+      "5pct_violations": 1.4705882352941175,
+      "observations": 68,
+      "total_forecasts": 68,
+      "calibration_factor": 0.060386473429951695
+    },
+    "regime_3_SPX_Index": {
+      "regime": 3,
+      "asset": "SPX Index",
+      "1pct_violations": 1.4925373134328357,
+      "5pct_violations": 1.4925373134328357,
+      "observations": 67,
+      "total_forecasts": 68,
+      "calibration_factor": 0.049776007964161276
+    },
+    "regime_3_RTY_Index": {
+      "regime": 3,
+      "asset": "RTY Index",
+      "1pct_violations": 2.0,
+      "5pct_violations": 2.0,
+      "observations": 50,
+      "total_forecasts": 51,
+      "calibration_factor": 0.06997900629811057
+    },
+    "regime_3_NDX_Index": {
+      "regime": 3,
+      "asset": "NDX Index",
+      "1pct_violations": 1.4925373134328357,
+      "5pct_violations": 1.4925373134328357,
+      "observations": 67,
+      "total_forecasts": 68,
+      "calibration_factor": 0.060386473429951695
+    },
+    "regime_4_SPX_Index": {
+      "regime": 4,
+      "asset": "SPX Index",
+      "1pct_violations": 5.128205128205128,
+      "5pct_violations": 12.82051282051282,
+      "observations": 78,
+      "total_forecasts": 78,
+      "calibration_factor": 0.049776007964161276
+    },
+    "regime_4_RTY_Index": {
+      "regime": 4,
+      "asset": "RTY Index",
+      "1pct_violations": 0.0,
+      "5pct_violations": 8.19672131147541,
+      "observations": 61,
+      "total_forecasts": 61,
+      "calibration_factor": 0.06997900629811057
+    },
+    "regime_4_NDX_Index": {
+      "regime": 4,
+      "asset": "NDX Index",
+      "1pct_violations": 3.8461538461538463,
+      "5pct_violations": 12.82051282051282,
+      "observations": 78,
+      "total_forecasts": 78,
+      "calibration_factor": 0.060386473429951695
+    }
+  }
+}

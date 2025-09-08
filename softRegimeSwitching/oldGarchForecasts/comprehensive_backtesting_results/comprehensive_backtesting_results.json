@@ -1,0 +1,832 @@
+{
+  "analysis_date": "2025-09-06T09:19:34.598818",
+  "scaling_explanation": {
+    "problem_identified": "GARCH-LSTM models predicted volatility 15-20x higher than actual market volatility",
+    "diagnostic_ratios": {
+      "SPX": "20.09x overestimation (forecast: 16.3% vs actual: 0.8% daily vol)",
+      "RTY": "14.29x overestimation (forecast: 18.3% vs actual: 1.3% daily vol)",
+      "NDX": "16.56x overestimation (forecast: 19.0% vs actual: 1.1% daily vol)"
+    },
+    "calibration_factors": {
+      "SPX": 0.049776007964161276,
+      "RTY": 0.06997900629811057,
+      "NDX": 0.060386473429951695
+    },
+    "methodology": "Applied calibration as: vol_forecast_calibrated = sqrt(RV22_forecast/22) * calibration_factor",
+    "result": "Achieved realistic VaR violation rates close to theoretical 1% and 5% targets"
+  },
+  "soft_regime_results": {
+    "NDX": {
+      "1%": {
+        "total_observations": 390,
+        "violations": "5",
+        "violation_rate": 0.01282051282051282,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 0.28775047653206587,
+          "uc_pvalue": 0.5916656970853293,
+          "actual_violations": 5,
+          "expected_violations": 3.9000000000000035,
+          "actual_rate": 0.01282051282051282,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 390,
+        "violations": "24",
+        "violation_rate": 0.06153846153846154,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 1.0215680123001873,
+          "uc_pvalue": 0.3121473607733257,
+          "actual_violations": 24,
+          "expected_violations": 19.500000000000018,
+          "actual_rate": 0.06153846153846154,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "RTY": {
+      "1%": {
+        "total_observations": 374,
+        "violations": "2",
+        "violation_rate": 0.0053475935828877,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 0.9844104543483574,
+          "uc_pvalue": 0.3211123563679851,
+          "actual_violations": 2,
+          "expected_violations": 3.7400000000000033,
+          "actual_rate": 0.0053475935828877,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 374,
+        "violations": "14",
+        "violation_rate": 0.0374331550802139,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 1.356847025817558,
+          "uc_pvalue": 0.2440846678096763,
+          "actual_violations": 14,
+          "expected_violations": 18.700000000000017,
+          "actual_rate": 0.0374331550802139,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "SPX": {
+      "1%": {
+        "total_observations": 390,
+        "violations": "4",
+        "violation_rate": 0.010256410256410256,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 0.002568366136574983,
+          "uc_pvalue": 0.9595812706537497,
+          "actual_violations": 4,
+          "expected_violations": 3.9000000000000035,
+          "actual_rate": 0.010256410256410256,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 390,
+        "violations": "20",
+        "violation_rate": 0.05128205128205128,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 0.013387386946688723,
+          "uc_pvalue": 0.9078872341971372,
+          "actual_violations": 20,
+          "expected_violations": 19.500000000000018,
+          "actual_rate": 0.05128205128205128,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    }
+  },
+  "hard_regime_results": {
+    "NDX_regime_0": {
+      "1%": {
+        "total_observations": 394,
+        "violations": "6",
+        "violation_rate": 0.015228426395939087,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 0.9378435057991789,
+          "uc_pvalue": 0.3328330545327304,
+          "actual_violations": 6,
+          "expected_violations": 3.9400000000000035,
+          "actual_rate": 0.015228426395939087,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 394,
+        "violations": "26",
+        "violation_rate": 0.06598984771573604,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 1.9354888367231171,
+          "uc_pvalue": 0.16415918745666047,
+          "actual_violations": 26,
+          "expected_violations": 19.700000000000017,
+          "actual_rate": 0.06598984771573604,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "NDX_regime_2": {
+      "1%": {
+        "total_observations": 68,
+        "violations": "0",
+        "violation_rate": 0.0,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 1.3668456760761973,
+          "uc_pvalue": 0.24235458035104462,
+          "actual_violations": 0,
+          "expected_violations": 0.6800000000000006,
+          "actual_rate": 0.0,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 68,
+        "violations": "1",
+        "violation_rate": 0.014705882352941176,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 2.440529089478706,
+          "uc_pvalue": 0.11823633936409417,
+          "actual_violations": 1,
+          "expected_violations": 3.400000000000003,
+          "actual_rate": 0.014705882352941176,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "NDX_regime_3": {
+      "1%": {
+        "total_observations": 67,
+        "violations": "1",
+        "violation_rate": 0.014925373134328358,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 0.14259965373708697,
+          "uc_pvalue": 0.7057101610558685,
+          "actual_violations": 1,
+          "expected_violations": 0.6700000000000006,
+          "actual_rate": 0.014925373134328358,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 67,
+        "violations": "3",
+        "violation_rate": 0.04477611940298507,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 0.03983272658761591,
+          "uc_pvalue": 0.8418079926868252,
+          "actual_violations": 3,
+          "expected_violations": 3.350000000000003,
+          "actual_rate": 0.04477611940298507,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "NDX_regime_4": {
+      "1%": {
+        "total_observations": 78,
+        "violations": "3",
+        "violation_rate": 0.038461538461538464,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 3.706885292832678,
+          "uc_pvalue": 0.05418842173385441,
+          "actual_violations": 3,
+          "expected_violations": 0.7800000000000007,
+          "actual_rate": 0.038461538461538464,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 78,
+        "violations": "10",
+        "violation_rate": 0.1282051282051282,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 7.148706308041795,
+          "uc_pvalue": 0.0075018080338843385,
+          "actual_violations": 10,
+          "expected_violations": 3.9000000000000035,
+          "actual_rate": 0.1282051282051282,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "True"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "RTY_regime_0": {
+      "1%": {
+        "total_observations": 378,
+        "violations": "6",
+        "violation_rate": 0.015873015873015872,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 1.117621428411612,
+          "uc_pvalue": 0.2904311989701511,
+          "actual_violations": 6,
+          "expected_violations": 3.7800000000000034,
+          "actual_rate": 0.015873015873015872,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 378,
+        "violations": "14",
+        "violation_rate": 0.037037037037037035,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 1.4636309540147365,
+          "uc_pvalue": 0.2263532804899534,
+          "actual_violations": 14,
+          "expected_violations": 18.900000000000016,
+          "actual_rate": 0.037037037037037035,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "RTY_regime_2": {
+      "1%": {
+        "total_observations": 51,
+        "violations": "0",
+        "violation_rate": 0.0,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 1.025134257057148,
+          "uc_pvalue": 0.31130423700291554,
+          "actual_violations": 0,
+          "expected_violations": 0.5100000000000005,
+          "actual_rate": 0.0,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 51,
+        "violations": "3",
+        "violation_rate": 0.058823529411764705,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 0.07930614381375357,
+          "uc_pvalue": 0.7782399141507299,
+          "actual_violations": 3,
+          "expected_violations": 2.5500000000000025,
+          "actual_rate": 0.058823529411764705,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "RTY_regime_3": {
+      "1%": {
+        "total_observations": 50,
+        "violations": "1",
+        "violation_rate": 0.02,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 0.3913619576461234,
+          "uc_pvalue": 0.5315843664903839,
+          "actual_violations": 1,
+          "expected_violations": 0.5000000000000004,
+          "actual_rate": 0.02,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 50,
+        "violations": "1",
+        "violation_rate": 0.02,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 1.214296069114737,
+          "uc_pvalue": 0.2704829623685363,
+          "actual_violations": 1,
+          "expected_violations": 2.500000000000002,
+          "actual_rate": 0.02,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "RTY_regime_4": {
+      "1%": {
+        "total_observations": 61,
+        "violations": "0",
+        "violation_rate": 0.0,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 1.226140974127177,
+          "uc_pvalue": 0.268158841499737,
+          "actual_violations": 0,
+          "expected_violations": 0.6100000000000005,
+          "actual_rate": 0.0,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 61,
+        "violations": "5",
+        "violation_rate": 0.08196721311475409,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 1.1093287644793133,
+          "uc_pvalue": 0.29222790677711274,
+          "actual_violations": 5,
+          "expected_violations": 3.0500000000000025,
+          "actual_rate": 0.08196721311475409,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "SPX_regime_0": {
+      "1%": {
+        "total_observations": 394,
+        "violations": "9",
+        "violation_rate": 0.02284263959390863,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 4.814715221855688,
+          "uc_pvalue": 0.028217733922897614,
+          "actual_violations": 9,
+          "expected_violations": 3.9400000000000035,
+          "actual_rate": 0.02284263959390863,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "True"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 394,
+        "violations": "27",
+        "violation_rate": 0.06852791878172589,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 2.565091561894061,
+          "uc_pvalue": 0.10924623216814766,
+          "actual_violations": 27,
+          "expected_violations": 19.700000000000017,
+          "actual_rate": 0.06852791878172589,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "SPX_regime_2": {
+      "1%": {
+        "total_observations": 68,
+        "violations": "0",
+        "violation_rate": 0.0,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 1.3668456760761973,
+          "uc_pvalue": 0.24235458035104462,
+          "actual_violations": 0,
+          "expected_violations": 0.6800000000000006,
+          "actual_rate": 0.0,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 68,
+        "violations": "2",
+        "violation_rate": 0.029411764705882353,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 0.7076107191500787,
+          "uc_pvalue": 0.40023813811142805,
+          "actual_violations": 2,
+          "expected_violations": 3.400000000000003,
+          "actual_rate": 0.029411764705882353,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "SPX_regime_3": {
+      "1%": {
+        "total_observations": 67,
+        "violations": "2",
+        "violation_rate": 0.029850746268656716,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 1.7413472151907072,
+          "uc_pvalue": 0.1869682161771371,
+          "actual_violations": 2,
+          "expected_violations": 0.6700000000000006,
+          "actual_rate": 0.029850746268656716,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 67,
+        "violations": "3",
+        "violation_rate": 0.04477611940298507,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 0.03983272658761591,
+          "uc_pvalue": 0.8418079926868252,
+          "actual_violations": 3,
+          "expected_violations": 3.350000000000003,
+          "actual_rate": 0.04477611940298507,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "False"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    },
+    "SPX_regime_4": {
+      "1%": {
+        "total_observations": 78,
+        "violations": "4",
+        "violation_rate": 0.05128205128205128,
+        "expected_rate": 0.010000000000000009,
+        "kupiec": {
+          "uc_statistic": 6.77422291382287,
+          "uc_pvalue": 0.00924837486773289,
+          "actual_violations": 4,
+          "expected_violations": 0.7800000000000007,
+          "actual_rate": 0.05128205128205128,
+          "expected_rate": 0.010000000000000009,
+          "reject_h0": "True"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      },
+      "5%": {
+        "total_observations": 78,
+        "violations": "10",
+        "violation_rate": 0.1282051282051282,
+        "expected_rate": 0.050000000000000044,
+        "kupiec": {
+          "uc_statistic": 7.148706308041795,
+          "uc_pvalue": 0.0075018080338843385,
+          "actual_violations": 10,
+          "expected_violations": 3.9000000000000035,
+          "actual_rate": 0.1282051282051282,
+          "expected_rate": 0.050000000000000044,
+          "reject_h0": "True"
+        },
+        "christoffersen": {
+          "cc_statistic": NaN,
+          "cc_pvalue": NaN,
+          "reject_h0": false,
+          "note": "Cannot compute due to zero transition counts"
+        },
+        "joint": {
+          "joint_statistic": NaN,
+          "joint_pvalue": NaN,
+          "reject_h0": false
+        }
+      }
+    }
+  }
+}
