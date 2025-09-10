@@ -1,11 +1,4 @@
 """
-Properly Scaled Hard Regime FHS Analysis
-========================================
-
-This script applies the calibration factors discovered from the soft regime analysis
-to the hard regime FHS implementation to achieve realistic VaR violation rates.
-
-Based on the diagnosis that GARCH-LSTM forecasts are 15-20x too high, we apply:
 - SPX: ÷20.09 calibration factor  
 - RTY: ÷14.29 calibration factor
 - NDX: ÷16.56 calibration factor

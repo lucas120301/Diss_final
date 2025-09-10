@@ -1,16 +1,7 @@
-"""
-Comprehensive VaR Analysis for All Models
-Runs filtered historical simulation VaR analysis on all volatility forecasting models.
-
-Usage:
-  python run_var_analysis_all_models.py
-"""
-
 import os
 import subprocess
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from glob import glob
 
 def find_model_outputs():
@@ -29,7 +20,6 @@ def find_model_outputs():
     return sorted(prediction_files)
 
 def parse_model_info(filepath):
-    """Extract model information from filename"""
     filename = os.path.basename(filepath)
     parts = filename.replace('.csv', '').split('_')
     
@@ -56,8 +46,6 @@ def parse_model_info(filepath):
     }
 
 def run_var_analysis(returns_csv, forecast_csv, model_name, confidence_levels=[0.01, 0.05]):
-    """Run VaR analysis for a single model"""
-    
     print(f"Running VaR analysis for {model_name}...")
     
     cmd = [
@@ -67,7 +55,6 @@ def run_var_analysis(returns_csv, forecast_csv, model_name, confidence_levels=[0
         "--model_name", model_name,
         "--confidence_levels"] + [str(cl) for cl in confidence_levels] + [
         "--out_prefix", "var_results",
-        "--plot"
     ]
     
     try:
@@ -177,52 +164,6 @@ def create_model_rankings(df):
         for _, row in cl_ranks.iterrows():
             print(f"  {row['rank']}. {row['model']} (Score: {row['composite_score']:.4f})")
 
-def create_comparison_plots():
-    """Create comparison plots across models"""
-    
-    # Load consolidated results
-    if not os.path.exists("var_results_consolidated.csv"):
-        print("No consolidated results found for plotting")
-        return
-    
-    df = pd.read_csv("var_results_consolidated.csv")
-    
-    # Violation rate comparison
-    fig, axes = plt.subplots(1, 2, figsize=(15, 6))
-    
-    for i, cl in enumerate(sorted(df['confidence_level'].unique())):
-        cl_data = df[df['confidence_level'] == cl]
-        
-        ax = axes[i]
-        models = cl_data['model'].values
-        violation_rates = cl_data['violation_rate'].values
-        expected_rate = cl
-        
-        bars = ax.bar(range(len(models)), violation_rates, alpha=0.7)
-        ax.axhline(y=expected_rate, color='red', linestyle='--', linewidth=2, 
-                  label=f'Expected Rate ({expected_rate:.1%})')
-        
-        # Color bars based on how close they are to expected rate
-        for j, (bar, rate) in enumerate(zip(bars, violation_rates)):
-            error = abs(rate - expected_rate)
-            if error < 0.01:  # Within 1%
-                bar.set_color('green')
-            elif error < 0.02:  # Within 2%
-                bar.set_color('orange')
-            else:
-                bar.set_color('red')
-        
-        ax.set_title(f'VaR {int(cl*100)}% - Violation Rates')
-        ax.set_ylabel('Violation Rate')
-        ax.set_xticks(range(len(models)))
-        ax.set_xticklabels(models, rotation=45, ha='right')
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.savefig('var_violation_rates_comparison.png', dpi=300, bbox_inches='tight')
-    plt.close()
-    print("Violation rates comparison plot saved: var_violation_rates_comparison.png")
 
 def main():
     print("=== Comprehensive VaR Analysis ===")
@@ -274,17 +215,12 @@ def main():
         print("\nConsolidating results...")
         consolidate_var_results()
         
-        # Create comparison plots
-        print("\nCreating comparison plots...")
-        create_comparison_plots()
-        
+
         print("\n=== All Analysis Complete ===")
         print("Check the following files:")
         print("- var_results_consolidated.csv - All VaR metrics")
         print("- var_summary_by_model.csv - Summary statistics")
         print("- var_model_rankings.csv - Model performance rankings")
-        print("- var_violation_rates_comparison.png - Comparison plot")
-        print("- Individual VaR plots: var_results_*_backtest.png")
     else:
         print("No successful VaR analyses completed.")
 

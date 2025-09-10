@@ -1,13 +1,4 @@
-"""
-Regime Validation Methods
 
-Comprehensive validation framework implementing multiple approaches to ensure
-robustness of the K-means regime detection results following the methodology:
-
-1. Cross-Method Validation: Alternative clustering methods with ARI comparison
-2. Economic Event Alignment: Validation against major market events  
-3. Statistical Quality Metrics: Multiple clustering quality measures
-"""
 
 import numpy as np
 import pandas as pd
@@ -22,16 +13,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class RegimeValidationMethods:
-    """
-    Comprehensive validation framework for regime detection results.
-    
-    Implements the three validation approaches described in the methodology:
-    - Cross-method validation with alternative clustering algorithms
-    - Economic event alignment validation
-    - Statistical quality metrics assessment
-    """
-    
-    def __init__(self, regime_labels_file='final_results/optimized_vol_risk_labels.csv'):
+    def __init__(self, regime_labels_file='final_results/vol_risk_labels.csv'):
         """Initialize with the regime detection results to validate."""
         self.regime_labels_file = regime_labels_file
         self.regime_labels = None
@@ -84,10 +66,6 @@ class RegimeValidationMethods:
         return self
         
     def cross_method_validation(self):
-        """
-        Implement cross-method validation using alternative clustering algorithms.
-        Calculate ARI between K-means and alternative methods.
-        """
         print("\n=== CROSS-METHOD VALIDATION ===")
         
         n_clusters = len(np.unique(self.regime_labels))
@@ -165,7 +143,7 @@ class RegimeValidationMethods:
             
             return validation_results, validation_summary
         else:
-            print("❌ No alternative methods succeeded")
+            print("No alternative methods succeeded")
             return {}, {}
     
     def economic_event_alignment(self):
@@ -218,11 +196,11 @@ class RegimeValidationMethods:
                     'alignment_quality': alignment_quality
                 })
                 
-                print(f"  ✅ {event_name} ({event_date_str})")
+                print(f"  {event_name} ({event_date_str})")
                 print(f"      → Regime change: {closest_transition['from_regime']} → {closest_transition['to_regime']}")
                 print(f"      → Distance: {min_distance.days} days")
             else:
-                print(f"  ❌ {event_name} ({event_date_str}) - No nearby transition")
+                print(f"  {event_name} ({event_date_str}) - No nearby transition")
         
         # Calculate alignment statistics
         total_events = len(self.major_events)
@@ -237,9 +215,9 @@ class RegimeValidationMethods:
             'threshold_met': alignment_rate >= 0.7  # 70% threshold from methodology
         }
         
-        print(f"\n📊 Economic Event Alignment Summary:")
+        print(f"\nEconomic Event Alignment Summary:")
         print(f"  Events aligned: {aligned_events}/{total_events} ({alignment_rate:.1%})")
-        print(f"  Threshold (70%): {'✅ MET' if alignment_summary['threshold_met'] else '❌ NOT MET'}")
+        print(f"  Threshold (70%): {'MET' if alignment_summary['threshold_met'] else 'NOT MET'}")
         print(f"  Perfect alignments (≤7 days): {alignment_summary['perfect_alignments']}")
         
         return alignments, alignment_summary
@@ -365,10 +343,10 @@ class RegimeValidationMethods:
         print(f"\n🎯 VALIDATION SUMMARY:")
         print(f"  Overall Score: {validation_score}/{max_score}")
         print(f"  Assessment: {comprehensive_results['overall_assessment'].upper()}")
-        print(f"  Cross-Method Robustness: {'✅' if comprehensive_results['robustness_assessment']['method_robustness'] else '❌'}")
-        print(f"  Economic Validity: {'✅' if comprehensive_results['robustness_assessment']['economic_validity'] else '❌'}")
-        print(f"  Statistical Quality: {'✅' if comprehensive_results['robustness_assessment']['statistical_quality'] else '❌'}")
-        print(f"  Production Ready: {'✅' if comprehensive_results['robustness_assessment']['recommended_for_production'] else '❌'}")
+        print(f"  Cross-Method Robustness: {'Y' if comprehensive_results['robustness_assessment']['method_robustness'] else 'N'}")
+        print(f"  Economic Validity: {'Y' if comprehensive_results['robustness_assessment']['economic_validity'] else 'N'}")
+        print(f"  Statistical Quality: {'Y' if comprehensive_results['robustness_assessment']['statistical_quality'] else 'N'}")
+        print(f"  Production Ready: {'Y' if comprehensive_results['robustness_assessment']['recommended_for_production'] else 'N'}")
         
         # Save results
         if save_results:

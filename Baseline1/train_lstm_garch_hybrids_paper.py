@@ -1,32 +1,4 @@
-"""
-train_hybrids_paper.py
-Single / Dual / Triple GARCH + LSTM hybrids per the paper.
 
-- Historical branch: RV_22 (scaled via MinMax fit on train only)
-- GARCH branches: supply your precomputed 252-day rolling forecasts (scaled per-branch on train)
-- Architecture (for ALL variants):
-  * each branch: LSTM(20) + Dropout(0.2)
-  * combiner: Dense(128, relu) -> Dense(64, relu) -> Dense(1, linear)
-- Adam + MSE, epochs=100, EarlyStopping(patience=5, monitor='val_loss')
-- 25 runs averaged
-- Windows: 5, 11, 22
-- 70/30 time split
-
-Usage examples:
-  Single:
-    python train_hybrids_paper.py --rv_csv extracted_0_1_RV22.csv --garch_csv sGarch_SPX_252roll.csv \
-        --mode single --out_prefix SPX_S
-
-  Dual (sGARCH + tGARCH):
-    python train_hybrids_paper.py --rv_csv extracted_0_1_RV22.csv \
-        --garch_csv sGarch_SPX_252roll.csv --garch_csv2 tGarch_SPX_252roll.csv \
-        --mode dual --out_prefix SPX_ST
-
-  Triple (s, e, t):
-    python train_hybrids_paper.py --rv_csv extracted_0_1_RV22.csv \
-        --garch_csv sGarch_SPX_252roll.csv --garch_csv2 eGarch_SPX_252roll.csv \
-        --garch_csv3 tGarch_SPX_252roll.csv --mode triple --out_prefix SPX_SET
-"""
 
 import argparse, os
 import numpy as np

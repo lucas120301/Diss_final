@@ -1,14 +1,3 @@
-# generate_garch_forecasts.py
-"""
-Generate 252-day rolling one-step-ahead variance forecasts:
-  - sGARCH(1,1), eGARCH(1,1), tGARCH(1,1)
-Input: a CSV with Date & Close (or a CSV with LR). We’ll compute LR if needed.
-Requires: pip install arch
-Usage:
-  python generate_garch_forecasts.py --csv data/extracted_0_1.csv --date_col Date --price_col Close --symbol SPX
-Or (if you already have LR in the file):
-  python generate_garch_forecasts.py --csv data/extracted_0_1_RV22.csv --date_col Date --lr_col LR --symbol SPX
-"""
 
 import argparse
 import numpy as np

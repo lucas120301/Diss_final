@@ -1,12 +1,12 @@
 {
-  "methodology": "optimized_vol_risk_17_feature_approach",
-  "silhouette_score": 0.25010431601942246,
+  "methodology": "vol_risk_feature_clustering",
+  "silhouette_score": 0.25205369841900516,
   "cluster_distribution": [
-    1659,
+    1668,
     26,
     519,
-    521,
-    552
+    497,
+    567
   ],
   "n_features": 13,
   "feature_names": [
@@ -25,11 +25,5 @@
     "VVIX_Level"
   ],
   "optimization_strategy": "high_n_init",
-  "random_seed": 1,
-  "comparison": {
-    "original_17_feature": 0.16,
-    "optimized_17_feature": 0.25010431601942246,
-    "improvement": 1.5631519751213903,
-    "vs_optimal_5_feature": 0.574952450619362
-  }
+  "random_seed": 6
 }

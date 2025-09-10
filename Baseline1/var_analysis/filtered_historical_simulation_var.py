@@ -1,27 +1,9 @@
-"""
-Corrected Filtered Historical Simulation VaR Analysis
-Implements proper FHS methodology with rolling windows and correct filtering.
-
-The key improvements:
-1. Rolling historical windows (proper FHS)
-2. Correct volatility standardization and filtering
-3. Proper quantile calculation for VaR
-4. Better alignment of forecasts and returns
-
-Usage:
-  python filtered_historical_simulation_var_corrected.py --returns_csv data/SPX_RV22.csv \
-      --volatility_forecasts model_output/SPX_S_single_win22.csv \
-      --model_name "SPX_GARCH_LSTM_single" --confidence_levels 0.01 0.05
-"""
-
 import argparse, os
 import numpy as np
 import pandas as pd
 from scipy import stats
-import matplotlib.pyplot as plt
 
 def load_returns_and_forecasts(returns_csv, forecast_csv, lr_col="LR"):
-    """Load historical returns and volatility forecasts, align properly"""
     print(f"Loading returns from {returns_csv}")
     print(f"Loading forecasts from {forecast_csv}")
     
@@ -59,24 +41,6 @@ def load_returns_and_forecasts(returns_csv, forecast_csv, lr_col="LR"):
     return historical_returns, forecasts, test_actuals
 
 def filtered_historical_simulation_corrected(historical_returns, volatility_forecasts, confidence_levels, window=252):
-    """
-    Corrected Filtered Historical Simulation VaR
-    
-    Proper FHS methodology:
-    1. For each forecast period t, use a rolling window of historical returns
-    2. Standardize the historical returns by their empirical volatility  
-    3. Scale by the forecasted volatility
-    4. Compute VaR as the appropriate quantile
-    
-    Args:
-        historical_returns: Array of all historical log returns
-        volatility_forecasts: Array of volatility forecasts
-        confidence_levels: List of confidence levels (e.g., [0.01, 0.05])
-        window: Lookback window for historical simulation (default 252)
-    
-    Returns:
-        Dictionary with VaR estimates for each confidence level
-    """
     print(f"Running corrected FHS with rolling window={window}")
     
     var_results = {f"VaR_{int(cl*100)}": [] for cl in confidence_levels}
@@ -111,9 +75,7 @@ def filtered_historical_simulation_corrected(historical_returns, volatility_fore
             hist_vol = 1e-8  # Small positive value to avoid division by zero
         
         standardized_returns = hist_window / hist_vol
-        
-        # CRITICAL FIX: Convert variance forecast to standard deviation
-        # Model predicts RV_22 which is VARIANCE, but FHS needs STANDARD DEVIATION
+
         vol_std = np.sqrt(vol_forecast)
         
         # Scale by forecasted standard deviation to get filtered returns
@@ -206,78 +168,6 @@ def backtest_var_corrected(actual_returns, var_estimates, confidence_level):
         'var_std': np.std(var_estimates)
     }
 
-def plot_var_backtesting_corrected(actual_returns, var_estimates, confidence_level, model_name, save_path=None):
-    """Enhanced VaR backtesting visualization"""
-    
-    fig, axes = plt.subplots(3, 1, figsize=(14, 10))
-    
-    dates = range(len(actual_returns))
-    violations = actual_returns < var_estimates
-    
-    # Time series plot
-    ax1 = axes[0]
-    ax1.plot(dates, actual_returns, alpha=0.7, label='Actual Returns', linewidth=0.8, color='blue')
-    ax1.plot(dates, var_estimates, label=f'VaR {int(confidence_level*100)}%', color='red', linewidth=1.5)
-    
-    # Highlight violations
-    violation_indices = np.where(violations)[0]
-    if len(violation_indices) > 0:
-        ax1.scatter(violation_indices, actual_returns[violations], 
-                   color='red', s=15, alpha=0.8, label='Violations', zorder=5)
-    
-    ax1.set_title(f'{model_name} - VaR {int(confidence_level*100)}% Backtesting (Corrected FHS)')
-    ax1.set_ylabel('Returns')
-    ax1.legend()
-    ax1.grid(True, alpha=0.3)
-    
-    # Rolling violation rate
-    ax2 = axes[1]
-    window = min(50, len(violations)//4)
-    rolling_violations = pd.Series(violations.astype(int)).rolling(window, min_periods=10).mean()
-    ax2.plot(dates, rolling_violations, label=f'Rolling Violation Rate ({window}d)', color='orange', linewidth=1.5)
-    ax2.axhline(y=confidence_level, color='red', linestyle='--', linewidth=2, 
-               label=f'Expected Rate ({confidence_level:.1%})')
-    ax2.set_title('Rolling Violation Rate')
-    ax2.set_ylabel('Violation Rate')
-    ax2.legend()
-    ax2.grid(True, alpha=0.3)
-    
-    # Violation clustering
-    ax3 = axes[2]
-    # Show periods with consecutive violations
-    violation_diff = np.diff(violations.astype(int))
-    cluster_starts = np.where(violation_diff == 1)[0] + 1
-    cluster_ends = np.where(violation_diff == -1)[0] + 1
-    
-    # Handle edge cases
-    if len(violations) > 0 and violations[0]:
-        cluster_starts = np.concatenate([[0], cluster_starts])
-    if len(violations) > 0 and violations[-1]:
-        cluster_ends = np.concatenate([cluster_ends, [len(violations)]])
-    
-    ax3.plot(dates, violations.astype(int), 'o-', markersize=3, alpha=0.7, label='Violations (0/1)')
-    
-    # Highlight violation clusters
-    for start, end in zip(cluster_starts, cluster_ends):
-        if end > start + 1:  # Only show clusters of 2+ consecutive violations
-            ax3.axvspan(start, end-1, alpha=0.3, color='red', label='Violation Clusters' if start == cluster_starts[0] else "")
-    
-    ax3.set_title('Violation Clustering')
-    ax3.set_xlabel('Time')
-    ax3.set_ylabel('Violation (0/1)')
-    ax3.legend()
-    ax3.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    
-    if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Enhanced plot saved: {save_path}")
-    else:
-        plt.show()
-    
-    plt.close()
-
 def main():
     parser = argparse.ArgumentParser(description="Corrected Filtered Historical Simulation VaR Analysis")
     parser.add_argument("--returns_csv", required=True, help="CSV with historical returns")
@@ -289,7 +179,6 @@ def main():
     parser.add_argument("--simulation_window", type=int, default=252, 
                        help="Historical simulation window")
     parser.add_argument("--out_prefix", default="var_results", help="Output file prefix")
-    parser.add_argument("--plot", action="store_true", help="Generate plots")
     
     args = parser.parse_args()
     
@@ -356,10 +245,6 @@ def main():
         print(f"Average VaR: {backtest_metrics['var_mean']:.6f}")
         print(f"Violation Severity: {backtest_metrics['violation_severity']:.6f}")
         
-        # Generate plots if requested
-        if args.plot:
-            plot_path = f"{args.out_prefix}_{args.model_name}_{var_key}_backtest.png"
-            plot_var_backtesting_corrected(returns_test, var_test, cl, args.model_name, plot_path)
     
     # Save detailed results
     results_df = pd.DataFrame(all_metrics)

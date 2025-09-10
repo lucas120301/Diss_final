@@ -1,7 +1,3 @@
-"""
-Analyze Volatility Forecasting Performance
-Compare RMSE/MAE across all models to understand if complexity helps volatility prediction.
-"""
 
 import pandas as pd
 import numpy as np
@@ -10,7 +6,6 @@ from glob import glob
 import os
 
 def load_all_metrics():
-    """Load all model metrics files"""
     metrics_files = glob("model_output/*_metrics.csv")
     
     all_metrics = []
@@ -48,9 +43,7 @@ def load_all_metrics():
     combined_df = pd.concat(all_metrics, ignore_index=True)
     return combined_df
 
-def analyze_model_performance(df):
-    """Analyze and rank models by volatility forecasting performance"""
-    
+def analyze_model_performance(df):    
     print("=== Volatility Forecasting Performance Analysis ===\n")
     
     # Group by index and model type
@@ -123,7 +116,6 @@ def create_performance_comparison_plots(df, summary_df):
         ax.set_xticklabels([mt.replace('_', '\n') for mt in model_types], rotation=0, fontsize=9)
         ax.grid(True, alpha=0.3)
         
-        # Add value labels on bars
         for bar, val in zip(bars, avg_rmse):
             ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + bar.get_height()*0.01,
                    f'{val:.5f}', ha='center', va='bottom', fontsize=8)
@@ -156,8 +148,7 @@ def create_performance_comparison_plots(df, summary_df):
     plt.close()
     print("Window analysis plot saved: performance_by_window_analysis.png")
 
-def analyze_paper_discrepancy(summary_df):
-    """Analyze why results differ from the original paper"""
+def analyse_paper_discrepancy(summary_df):
     
     print("\n=== Analysis: Discrepancy with Original Paper ===")
     
@@ -226,18 +217,18 @@ def main():
     print(f"Model types: {df['model_type'].unique()}")
     print(f"Windows: {sorted(df['window'].unique())}")
     
-    # Analyze performance
-    summary_df = analyze_model_performance(df)
+    # Analyse performance
+    summary_df = analyse_model_performance(df)
     
     # Save detailed results
     df.to_csv('volatility_forecasting_detailed_results.csv', index=False)
     summary_df.to_csv('volatility_forecasting_summary.csv', index=False)
     
-    # Create visualizations
+    # Create visualisations
     create_performance_comparison_plots(df, summary_df)
     
-    # Analyze discrepancy with paper
-    analyze_paper_discrepancy(summary_df)
+    # Analyse discrepancy with paper
+    analyse_paper_discrepancy(summary_df)
     
     print(f"\n=== Files Generated ===")
     print("- volatility_forecasting_detailed_results.csv")

@@ -1,18 +1,3 @@
-"""
-train_lstm_baseline_paper.py
-Baseline LSTM exactly as in the paper.
-
-- LSTM(20), Dropout(0.2), Dense(1)
-- Adam + MSE, epochs=100, EarlyStopping(patience=5, monitor='val_loss')
-- Windows: 5, 11, 22
-- 70/30 time split
-- 25 runs averaged
-- Input: RV_22 (scaled via MinMax fit on train only)
-
-Usage:
-  python train_lstm_baseline_paper.py --rv_csv extracted_0_1_RV22.csv --date_col Date \
-      --rv_col RV_22 --start 2006-03-30 --end 2020-03-20 --out_prefix SPX_LSTM
-"""
 
 import argparse, os
 import numpy as np

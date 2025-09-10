@@ -1,18 +1,5 @@
 """
-Comprehensive VaR Backtesting: Kupiec and Christoffersen Tests
-==============================================================
-
-This script performs rigorous backtesting of both soft and hard regime FHS results
-using industry-standard tests:
-
-1. Kupiec Test (Unconditional Coverage): Tests if violation rate matches expected rate
-2. Christoffersen Test (Independence): Tests if violations are independent over time
-3. Joint Test: Combined test for both coverage and independence
-
-Scaling Factor Explanation:
-- GARCH-LSTM models predicted volatility 15-20x higher than actual
-- Applied calibration factors: SPX (÷20.09), RTY (÷14.29), NDX (÷16.56)
-- These factors correct the massive overestimation to achieve realistic VaR levels
+VAR Backtesting: Christoffersen, Kupiec, Joint
 """
 
 import pandas as pd
@@ -94,14 +81,6 @@ class VaRBacktesting:
         }
     
     def christoffersen_test(self, violation_series):
-        """
-        Christoffersen Test (Independence Test)
-        
-        H0: Violations are independent (no clustering)
-        H1: Violations show dependence/clustering
-        
-        Tests independence using transition matrix
-        """
         violations = violation_series.astype(int)
         n = len(violations)
         
@@ -133,16 +112,12 @@ class VaRBacktesting:
             }
         
         # Conditional probabilities
-        pi_01 = n01 / n0  # P(violation tomorrow | no violation today)
-        pi_11 = n11 / n1  # P(violation tomorrow | violation today)
+        pi_01 = n01 / n0 
+        pi_11 = n11 / n1 
         
         # Overall violation rate
         pi = (n01 + n11) / (n - 1)
-        
-        # Likelihood ratio test statistic
-        # L0: independence (pi_01 = pi_11 = pi)
-        # L1: dependence (pi_01 ≠ pi_11)
-        
+
         if pi == 0 or pi == 1:
             cc_stat = np.nan
             p_value = np.nan
@@ -168,11 +143,6 @@ class VaRBacktesting:
         }
     
     def joint_test(self, kupiec_result, christoffersen_result):
-        """
-        Joint Test (Christoffersen): Combined unconditional coverage + independence
-        
-        Test statistic = UC_stat + Independence_stat ~ χ²(2)
-        """
         if pd.isna(kupiec_result['uc_statistic']) or pd.isna(christoffersen_result['cc_statistic']):
             return {
                 'joint_statistic': np.nan,
@@ -220,7 +190,7 @@ class VaRBacktesting:
             valid_data = group_data.dropna(subset=['Actual_Return'])
             
             if len(valid_data) < 10:
-                print(f"❌ Insufficient data ({len(valid_data)} observations)")
+                print(f"Insufficient data ({len(valid_data)} observations)")
                 continue
             
             results[key] = {}
@@ -266,10 +236,6 @@ class VaRBacktesting:
         return results
     
     def run_comprehensive_backtesting(self):
-        """Run backtesting on both soft and hard regime results"""
-        print("🚀 COMPREHENSIVE VAR BACKTESTING")
-        print("="*60)
-        
         all_results = {
             'analysis_date': datetime.now().isoformat(),
             'scaling_explanation': self.scaling_explanation,
@@ -301,13 +267,13 @@ class VaRBacktesting:
                     soft_combined, "SOFT REGIME FHS"
                 )
             else:
-                print("❌ No soft regime results found")
+                print("No soft regime results found")
                 
         except Exception as e:
-            print(f"❌ Error loading soft results: {e}")
+            print(f"Error loading soft results: {e}")
         
         # Load and test hard regime results  
-        print("\n📊 LOADING HARD REGIME RESULTS...")
+        print("\nLOADING HARD REGIME RESULTS...")
         try:
             hard_combined_file = f"{self.hard_results_path}/all_properly_scaled_hard_regime_fhs.csv"
             if os.path.exists(hard_combined_file):
@@ -319,10 +285,10 @@ class VaRBacktesting:
                     hard_combined, "HARD REGIME FHS"
                 )
             else:
-                print("❌ Hard regime results file not found")
+                print("Hard regime results file not found")
                 
         except Exception as e:
-            print(f"❌ Error loading hard results: {e}")
+            print(f"Error loading hard results: {e}")
         
         # Save comprehensive results
         output_file = f"{self.output_dir}/comprehensive_backtesting_results.json"
@@ -385,19 +351,10 @@ class VaRBacktesting:
             
             summary_lines.append("")
         
-        # Save summary report
         summary_file = f"{self.output_dir}/backtesting_summary_report.txt"
         with open(summary_file, 'w') as f:
             f.write('\n'.join(summary_lines))
         print(f"✅ Saved summary report: {summary_file}")
-        
-        # Print key findings
-        print("\n🎯 KEY FINDINGS:")
-        print("="*30)
-        print("1. Scaling factors successfully corrected GARCH-LSTM overestimation")
-        print("2. Achieved realistic VaR violation rates close to theoretical targets")
-        print("3. See detailed test results in comprehensive_backtesting_results.json")
-        print("4. See readable summary in backtesting_summary_report.txt")
 
 if __name__ == "__main__":
     backtester = VaRBacktesting()

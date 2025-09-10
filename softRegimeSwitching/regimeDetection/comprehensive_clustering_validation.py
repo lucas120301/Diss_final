@@ -1,19 +1,8 @@
 """
-Comprehensive Clustering Validation for Soft Regime-Switching
-============================================================
-
-This script tests multiple clustering methods and soft probability conversion techniques
-to identify the optimal approach for regime-switching VaR modeling.
-
-Methods tested:
-1. K-means with various soft probability conversions
+Soft Regime Clustering with validation
+1. K-means with various soft probability conversions 
 2. Gaussian Mixture Models with different covariance types
 3. Multiple evaluation metrics to select the best approach
-
-Based on academic literature:
-- "Dynamic Model Averaging under Regime Switching"
-- "Bayesian Model Averaging for regime-switching models"
-- "Markov-switching GARCH models"
 """
 
 import numpy as np
@@ -32,17 +21,8 @@ import json
 from datetime import datetime
 warnings.filterwarnings('ignore')
 
-class ClusteringValidator:
-    """Comprehensive validation of clustering methods for soft regime probabilities"""
-    
+class ClusteringValidator:    
     def __init__(self, data_path, n_regimes=5, random_state=42, start_date='2012-01-01'):
-        """
-        Args:
-            data_path: Path to cleaned data CSV
-            n_regimes: Number of regimes to detect
-            random_state: Random seed for reproducibility
-            start_date: Start date for analysis (default 2012-01-01)
-        """
         self.data_path = data_path
         self.n_regimes = n_regimes
         self.random_state = random_state
@@ -54,33 +34,21 @@ class ClusteringValidator:
         self.feature_data = None
         self.features_scaled = None
         
-        print(f"🎯 COMPREHENSIVE CLUSTERING VALIDATION")
-        print("=" * 60)
-        print(f"Testing {n_regimes} regimes with multiple methods")
-        print(f"Using data from {start_date} onwards")
-        print()
+        print(f"CLUSTERING VALIDATION")
+
         
     def load_and_prepare_data(self):
-        """Load data and create regime features"""
-        print("📊 Loading and preparing data...")
-        
         # Load the cleaned data
         data = pd.read_csv(self.data_path, parse_dates=['Date'])
-        print(f"  ✅ Loaded {len(data)} observations")
-        print(f"  📅 Date range: {data['Date'].min()} to {data['Date'].max()}")
-        print(f"  🏦 Assets: {data['Name'].nunique()} unique")
         
         # Filter data from start_date onwards
         data = data[data['Date'] >= pd.to_datetime(self.start_date)]
-        print(f"  📅 Filtered to {self.start_date}: {len(data)} observations")
         
         # Pivot to wide format
         pivot_data = data.pivot(index='Date', columns='Name', values='Price')
-        print(f"  📈 Pivot shape: {pivot_data.shape}")
         
         # Calculate returns for each asset - don't dropna yet
         returns = pivot_data.pct_change()
-        print(f"  💹 Returns shape: {returns.shape}")
         
         # Create regime features following academic literature
         features = self._create_regime_features(returns, pivot_data)
@@ -89,14 +57,10 @@ class ClusteringValidator:
         self.feature_data = features
         self.features_scaled = self.scaler.fit_transform(features)
         
-        print(f"  ✅ Created {features.shape[1]} regime features")
-        print(f"  📊 Features: {list(features.columns)}")
-        
         return self
         
     def _create_regime_features(self, returns, prices):
         """Create comprehensive regime features"""
-        print("    🔧 Creating regime detection features...")
         
         features_dict = {}
         
@@ -216,7 +180,7 @@ class ClusteringValidator:
         
         # Create DataFrame from features
         if not features_dict:
-            print(f"      ❌ No features created - insufficient data coverage")
+            print(f"No features created - insufficient data coverage")
             return pd.DataFrame()
         
         # Find common index across all features
@@ -229,7 +193,7 @@ class ClusteringValidator:
                 common_index = common_index.intersection(feature_index)
         
         if len(common_index) < 100:
-            print(f"      ❌ Insufficient common dates: {len(common_index)}")
+            print(f"Insufficient common dates: {len(common_index)}")
             return pd.DataFrame()
         
         # Align all features to common index
@@ -241,16 +205,10 @@ class ClusteringValidator:
         
         # Final cleanup - remove any remaining NaN
         features = features.dropna()
-        
-        print(f"      ✅ Created {len(features)} feature observations")
-        print(f"      📅 Feature period: {features.index.min()} to {features.index.max()}")
-        
         return features
     
     def test_kmeans_methods(self):
         """Test K-means with different soft probability conversion methods"""
-        print("\n🎲 Testing K-means with soft probability methods...")
-        
         kmeans_methods = {
             'inverse_distance': {
                 'description': 'Inverse distance weighting: 1/(1+d)',
@@ -308,21 +266,14 @@ class ClusteringValidator:
                 'cluster_centers': kmeans.cluster_centers_,
                 'evaluation': evaluation,
                 'config': config
-            }
-            
-            print(f"      ✅ Completed {method_name}")
-        
+            }        
         return self
     
     def test_gmm_methods(self):
         """Test Gaussian Mixture Models with different covariance types"""
-        print("\n🎭 Testing Gaussian Mixture Models...")
-        
         covariance_types = ['full', 'tied', 'diag', 'spherical']
         
         for cov_type in covariance_types:
-            print(f"  🔄 Testing GMM with {cov_type} covariance...")
-            
             try:
                 # Fit GMM
                 gmm = GaussianMixture(
@@ -367,10 +318,8 @@ class ClusteringValidator:
                     'log_likelihood': gmm.score(self.features_scaled)
                 }
                 
-                print(f"      ✅ Completed GMM {cov_type}")
-                
             except Exception as e:
-                print(f"      ❌ Failed GMM {cov_type}: {e}")
+                print(f" Failed GMM {cov_type}: {e}")
         
         return self
     
@@ -464,11 +413,9 @@ class ClusteringValidator:
     
     def compare_all_methods(self):
         """Compare all tested methods and rank them"""
-        print(f"\n📊 COMPARING ALL METHODS")
-        print("=" * 50)
-        
+
         if not self.results:
-            print("❌ No results to compare")
+            print("No results to compare")
             return
         
         # Create comparison DataFrame
@@ -532,8 +479,8 @@ class ClusteringValidator:
         
         # Recommend best method
         best_method = comparison_df.iloc[0]
-        print(f"🎯 RECOMMENDED METHOD: {best_method['method']}")
-        print(f"   → Best overall performance with {best_method['overall_score']:.3f} score")
+        print(f"RECOMMENDED METHOD: {best_method['method']}")
+        print(f"Best overall performance with {best_method['overall_score']:.3f} score")
         
         # Get description safely
         best_result = self.results[best_method['method']]
@@ -692,14 +639,14 @@ class ClusteringValidator:
                 )
             
             prob_df.to_csv(f'{output_dir}/best_soft_probabilities.csv')
-            print("    ✅ Best soft probabilities saved")
+            print("Best soft probabilities saved")
             
             # Save hard labels too
             labels_df = pd.DataFrame({
                 'hard_regime': best_result['hard_labels']
             }, index=prob_df.index)
             labels_df.to_csv(f'{output_dir}/best_hard_labels.csv')
-            print("    ✅ Best hard labels saved")
+            print("Best hard labels saved")
         
         # 3. Save comprehensive metadata
         metadata = {
@@ -728,7 +675,7 @@ class ClusteringValidator:
         
         with open(f'{output_dir}/validation_metadata.json', 'w') as f:
             json.dump(metadata, f, indent=2, default=str)
-        print("    ✅ Validation metadata saved")
+        print("Validation metadata saved")
         
         # 4. Create summary report
         summary_lines = [
@@ -784,16 +731,10 @@ class ClusteringValidator:
         with open(f'{output_dir}/SUMMARY.txt', 'w') as f:
             f.write('\n'.join(summary_lines))
         
-        print("    ✅ Summary report saved")
-        
         return self
 
 def main():
     """Run comprehensive clustering validation"""
-    print("🎯 SOFT REGIME-SWITCHING CLUSTERING VALIDATION")
-    print("=" * 60)
-    print("Testing multiple clustering methods for optimal regime detection")
-    print()
     
     # Initialize validator with 2012 start date for full historical coverage
     data_path = "/Users/user/Desktop/Imperial/Diss_final/softRegimeSwitching/terminal data 1_cleaned.csv"
@@ -817,7 +758,7 @@ def main():
         print("  • Detailed metadata and summary")
         
     except Exception as e:
-        print(f"\n❌ VALIDATION FAILED: {e}")
+        print(f"\nVALIDATION FAILED: {e}")
         import traceback
         traceback.print_exc()
 

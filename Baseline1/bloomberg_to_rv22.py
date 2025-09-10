@@ -1,12 +1,4 @@
-# bloomberg_to_rv22.py
-"""
-Extract [Date, Close] from Bloomberg-style wide Excel and build RV_22 CSVs.
 
-Usage:
-  python bloomberg_to_rv22.py --xlsx "terminal data 1.xlsx" --pairs "0,1" "3,4" "6,7" --outdir data
-Options:
-  --sheet SHEETNAME   (optional; default=first sheet)
-"""
 
 import argparse, os
 from datetime import datetime, timedelta
@@ -112,7 +104,7 @@ def main():
             base, rv = extract_pair(args.xlsx, d, p, out_prefix, sheet_name=args.sheet)
             summary.append({"pair": pair, "base_csv": base, "rv_csv": rv})
         except Exception as e:
-            print(f"❌ Error for pair {pair}: {e}")
+            print(f"Error for pair {pair}: {e}")
             summary.append({"pair": pair, "base_csv": None, "rv_csv": None})
 
     # 4) Summary

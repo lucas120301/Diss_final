@@ -1,6 +1,5 @@
 """
-replication_adapter.py
-Paper-accurate preprocessing helpers + windowing.
+Preprocessing
 """
 
 from __future__ import annotations

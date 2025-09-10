@@ -1,9 +1,3 @@
-# extract_prices.py
-# Usage:
-#   pip install pandas openpyxl
-#   python3 extract_prices.py "terminal data 1.xlsx"          # -> terminal data 1_cleaned.csv
-#   python3 extract_prices.py "terminal data 1.xlsx" Sheet1   # optional sheet
-#   python3 extract_prices.py "terminal data 1.xlsx" Sheet1 out.csv
 
 import sys
 from pathlib import Path

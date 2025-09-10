@@ -1,8 +1,3 @@
-"""
-FHS VaR Analysis for Original Paper Results
-Compare Indian metals GARCH-LSTM performance with our US equity regime-switching approach
-"""
-
 import pandas as pd
 import numpy as np
 import os
@@ -56,12 +51,8 @@ def christoffersen_test(violations_series, confidence_level):
     return lr_stat, p_value
 
 def analyze_original_paper_results():
-    """Analyze FHS VaR performance for original paper's results"""
-    print("=== FHS VaR Analysis for Original A-Hybrid-Deep-Learning Paper ===")
-    
-    original_dir = "/Users/user/Desktop/Imperial/Diss_Final/Indian_Metals"
-    results_dir = f"{original_dir}/Result Analysis/Model Output"
-    data_file = f"{original_dir}/Data/Final.csv"
+    results_dir = "/Result Analysis/Model Output"
+    data_file = "/Data/Final.csv"
     
     # Load the main data for returns
     print("Loading original paper data...")
@@ -260,35 +251,7 @@ def analyze_original_paper_results():
         print("\\nNo results generated - check file paths and data structure")
         return None
 
-def compare_with_regime_switching():
-    """Compare original paper results with our regime-switching results"""
-    print("\\n=== Comparison with Regime-Switching Results ===")
-    
-    # Load our regime-switching results
-    our_results_file = "/Users/user/Desktop/Imperial/Diss/Baseline1/var_analysis/final_results/BASELINE1_ALL_CORRECTED_RESULTS.csv"
-    
-    if os.path.exists(our_results_file):
-        our_results = pd.read_csv(our_results_file)
-        print("Loaded our regime-switching results")
-        
-        print("\\nOur Results Summary:")
-        our_95 = our_results[our_results['confidence_level'] == 0.05]
-        our_99 = our_results[our_results['confidence_level'] == 0.01]
-        
-        print(f"95% VaR - Average violation rate: {our_95['violation_rate'].mean():.1%}")
-        print(f"95% VaR - Kupiec pass rate: {(our_95['uc_pvalue'] > 0.05).mean():.1%}")
-        print(f"99% VaR - Average violation rate: {our_99['violation_rate'].mean():.1%}")
-        print(f"99% VaR - Kupiec pass rate: {(our_99['uc_pvalue'] > 0.05).mean():.1%}")
-    else:
-        print(f"Could not find our results file: {our_results_file}")
 
 if __name__ == "__main__":
     original_results = analyze_original_paper_results()
-    if original_results is not None:
-        compare_with_regime_switching()
-        print("\\n🎯 FHS VaR analysis completed!")
-        print("\\nKey insights:")
-        print("1. Original paper focuses on forecasting accuracy (RMSE, MAE, MAPE)")
-        print("2. Our analysis adds VaR validation using Kupiec and Christoffersen tests") 
-        print("3. This reveals whether their good forecasting translates to good risk management")
-        print("4. Comparison shows importance of regime-switching for regulatory compliance")
+    

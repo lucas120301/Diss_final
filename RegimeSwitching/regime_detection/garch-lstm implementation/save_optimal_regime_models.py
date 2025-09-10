@@ -1,17 +1,3 @@
-"""
-Retrain and Save Optimal Regime-Specific GARCH-LSTM Models
-Identical to corrected_regime_garch_lstm.py but only trains optimal window sizes and SAVES predictions/models
-
-Optimal windows from analysis:
-- SPX Index: Window 5
-- RTY Index: Window 22  
-- NDX Index: Window 5
-
-This script:
-1. Uses EXACTLY the same methodology as corrected_regime_garch_lstm.py
-2. Only trains optimal window sizes for each asset
-3. SAVES predictions, models, and scalers for FHS analysis
-"""
 
 import os
 import numpy as np
@@ -28,14 +14,12 @@ import warnings
 warnings.filterwarnings('ignore')
 
 def metrics(y_true, y_pred):
-    """Calculate performance metrics"""
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mae = mean_absolute_error(y_true, y_pred)
     mape = np.mean(np.abs(1 - (y_pred / y_true)))
     return rmse, mae, mape
 
 def make_windows(series_1d, window):
-    """Convert 1D array to (X, y) for LSTM training - from Baseline1"""
     X, y = [], []
     for i in range(len(series_1d) - window):
         X.append(series_1d[i:i+window])
@@ -45,7 +29,6 @@ def make_windows(series_1d, window):
     return X, y
 
 def build_hybrid_model(window):
-    """Build GARCH-LSTM hybrid exactly like Baseline1"""
     # Historical branch (RV_22)
     hist_in = Input(shape=(window, 1), name="hist_in")
     hist_l = LSTM(20, activation='relu', return_sequences=False, name="hist_lstm")(hist_in)
@@ -67,11 +50,6 @@ def build_hybrid_model(window):
     return model
 
 def generate_garch_variance_forecasts(returns, window=252):
-    """
-    Generate 252-day rolling sGARCH(1,1) VARIANCE forecasts
-    FIXED: Returns variance (not volatility) to match RV_22 target scale
-    Based on Baseline1's generate_garch_forecasts.py
-    """
     print(f"      Generating GARCH VARIANCE forecasts with {window}-day rolling window...")
     
     out = []
@@ -177,9 +155,9 @@ class OptimalRegimeGARCHLSTMSaver:
         for regime, count in regime_counts.items():
             if count >= self.min_obs_threshold:
                 self.viable_regimes.append(regime)
-                print(f"  Regime {regime}: {count} obs ✅ Viable")
+                print(f"  Regime {regime}: {count} obs Viable")
             else:
-                print(f"  Regime {regime}: {count} obs ❌ Insufficient data")
+                print(f"  Regime {regime}: {count} obs Insufficient data")
         
         print(f"\nTraining on {len(self.viable_regimes)} viable regimes: {self.viable_regimes}")
         return self
@@ -203,7 +181,7 @@ class OptimalRegimeGARCHLSTMSaver:
                 lr_col = f"{asset}_LR"
                 
                 if rv_col not in self.data.columns or lr_col not in self.data.columns:
-                    print(f"    ❌ {asset}: Missing columns")
+                    print(f"    {asset}: Missing columns")
                     continue
                 
                 rv_data = self.data.loc[regime_dates, rv_col].dropna()
@@ -220,9 +198,9 @@ class OptimalRegimeGARCHLSTMSaver:
                         'log_returns': lr_aligned,
                         'dates': common_asset_dates
                     }
-                    print(f"    ✅ {asset}: {len(rv_aligned)} aligned observations")
+                    print(f"    {asset}: {len(rv_aligned)} aligned observations")
                 else:
-                    print(f"    ❌ {asset}: Insufficient data (RV:{len(rv_data)}, LR:{len(lr_data)})")
+                    print(f"    {asset}: Insufficient data (RV:{len(rv_data)}, LR:{len(lr_data)})")
         
         return self
     
@@ -248,7 +226,7 @@ class OptimalRegimeGARCHLSTMSaver:
         rv_aligned, garch_aligned = align_lengths(rv_series, garch_forecasts)
         
         if len(rv_aligned) < 100:
-            print(f"    ❌ Insufficient aligned data: {len(rv_aligned)}")
+            print(f"    Insufficient aligned data: {len(rv_aligned)}")
             return None
         
         print(f"    Aligned series length: {len(rv_aligned)}")
@@ -281,7 +259,7 @@ class OptimalRegimeGARCHLSTMSaver:
         test_garch_input = test_garch_scaled[window:].reshape(-1, 1, 1)
         
         if len(X_train_hist) < 20 or len(X_test_hist) < 5:
-            print(f"      ❌ Insufficient windowed data")
+            print(f"      Insufficient windowed data")
             return None
         
         # Step 6: Multiple runs and averaging (IDENTICAL to corrected)
@@ -319,7 +297,7 @@ class OptimalRegimeGARCHLSTMSaver:
         # Step 7: Safe averaging (IDENTICAL to corrected)
         preds_clean = [p for p in predictions_runs if len(p) > 0 and np.all(np.isfinite(p))]
         if len(preds_clean) == 0:
-            print(f"      ❌ All runs failed")
+            print(f"      All runs failed")
             return None
         
         preds_mean = np.mean(np.vstack(preds_clean), axis=0)
@@ -335,7 +313,7 @@ class OptimalRegimeGARCHLSTMSaver:
         p_eval = preds_inv[mask]
         
         if len(y_eval) < 5:
-            print(f"      ❌ Insufficient finite predictions")
+            print(f"      Insufficient finite predictions")
             return None
         
         rmse, mae, mape = metrics(y_eval, p_eval)
@@ -386,8 +364,8 @@ class OptimalRegimeGARCHLSTMSaver:
         # Store for combined file
         self.all_predictions.append(predictions_df)
         
-        print(f"      ✅ RMSE: {rmse:.6f}, MAE: {mae:.6f}, MAPE: {mape:.4f}")
-        print(f"      💾 Saved: {os.path.basename(model_file)}, scalers, {len(predictions_df)} predictions")
+        print(f"      RMSE: {rmse:.6f}, MAE: {mae:.6f}, MAPE: {mape:.4f}")
+        print(f"      Saved: {os.path.basename(model_file)}, scalers, {len(predictions_df)} predictions")
         
         return {
             'regime': regime,
@@ -422,7 +400,7 @@ class OptimalRegimeGARCHLSTMSaver:
             
             for asset, optimal_window in self.optimal_configs.items():
                 if regime not in self.regime_data or asset not in self.regime_data[regime]:
-                    print(f"  ❌ {asset}: No data available")
+                    print(f"  {asset}: No data available")
                     continue
                 
                 result = self.train_and_save_optimal_model(regime, asset)
@@ -450,16 +428,16 @@ class OptimalRegimeGARCHLSTMSaver:
                     avg_rmse = regime_results['rmse'].mean()
                     print(f"  Regime {regime}: {len(regime_results)} models, avg RMSE: {avg_rmse:.6f}")
             
-            print(f"\n💾 Files saved in: {self.output_dir}")
+            print(f"\nFiles saved in: {self.output_dir}")
             print("  - models/: Trained Keras models (.h5)")
             print("  - scalers/: MinMaxScaler objects (.pkl)")  
             print("  - predictions/: Individual prediction CSVs")
             print(f"  - all_optimal_predictions.csv: Combined predictions")
             print(f"  - optimal_training_summary.csv: Training summary")
         else:
-            print("\n❌ No models were successfully trained")
+            print("\nNo models were successfully trained")
         
-        print("\n🎉 Optimal model training and saving complete!")
+        print("\nOptimal model training and saving complete!")
         return self
 
 if __name__ == "__main__":

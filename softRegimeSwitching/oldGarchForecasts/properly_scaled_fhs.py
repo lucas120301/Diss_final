@@ -1,9 +1,5 @@
 """
-Properly Scaled FHS - Correcting the Massive Volatility Overestimation
-=====================================================================
-
-Based on diagnostics, the GARCH-LSTM forecasts are 15-20x too high.
-Let's apply proper calibration factors.
+FHS - Scaled by the scaling factors
 """
 
 import pandas as pd
@@ -18,26 +14,23 @@ class ProperlyScaledFHS:
         self.soft_forecasts_dir = "results"
         self.market_data_path = f"{self.base_path}/softRegimeSwitching/garch-lstm implementation/financial_indices_data.csv"
         self.output_dir = "properly_scaled_fhs_results"
-        
-        # Create output directory
+
         os.makedirs(self.output_dir, exist_ok=True)
         
-        # Calibration factors based on diagnostics (forecast/realized ratios)
         self.calibration_factors = {
-            'SPX': 1.0 / 20.09,  # Divide by 20.09 to correct overestimation
-            'RTY': 1.0 / 14.29,  # Divide by 14.29
-            'NDX': 1.0 / 16.56   # Divide by 16.56
+            'SPX': 1.0 / 20.09,  
+            'RTY': 1.0 / 14.29,  
+            'NDX': 1.0 / 16.56  
         }
         
     def load_data(self):
-        """Load soft weighted forecasts and market data"""
         print("📊 Loading soft weighted forecasts and market data...")
         
         self.soft_forecasts = pd.read_csv(
             f"{self.soft_forecasts_dir}/all_soft_weighted_forecasts.csv",
             parse_dates=['Date']
         )
-        print(f"✅ Loaded soft forecasts: {self.soft_forecasts.shape}")
+        print(f"Loaded soft forecasts: {self.soft_forecasts.shape}")
         
         self.market_data = pd.read_csv(
             self.market_data_path, 
@@ -50,7 +43,7 @@ class ProperlyScaledFHS:
     
     def run_fhs_for_asset(self, asset):
         """Run FHS with proper calibration for a specific asset"""
-        print(f"\n📈 Running properly calibrated FHS for {asset}...")
+        print(f"\nRunning properly calibrated FHS for {asset}...")
         
         calibration_factor = self.calibration_factors[asset]
         print(f"Using calibration factor: {calibration_factor:.4f} (1/{1/calibration_factor:.2f})")
@@ -62,7 +55,7 @@ class ProperlyScaledFHS:
         
         return_col = f"Returns_{asset}"
         if return_col not in self.market_data.columns:
-            print(f"❌ Missing returns column: {return_col}")
+            print(f"Missing returns column: {return_col}")
             return None
         
         returns = self.market_data[return_col].dropna()
@@ -127,7 +120,7 @@ class ProperlyScaledFHS:
         results_df = pd.DataFrame(results)
         
         if len(results_df) == 0:
-            print(f"❌ No FHS results generated for {asset}")
+            print(f"No FHS results generated for {asset}")
             return None
         
         # Calculate violation rates
@@ -204,20 +197,17 @@ class ProperlyScaledFHS:
                         "calibration_factor": self.calibration_factors[asset]
                     }
         
-        # Save combined results
         if all_results:
             combined_results = pd.concat(all_results, ignore_index=True)
             combined_file = f"{self.output_dir}/all_properly_scaled_fhs_results.csv"
             combined_results.to_csv(combined_file, index=False)
             print(f"💾 Saved combined results: {combined_file}")
-        
-        # Save summary
+
         summary_file = f"{self.output_dir}/properly_scaled_fhs_summary.json"
         with open(summary_file, 'w') as f:
             json.dump(summary_results, f, indent=2)
         print(f"💾 Saved summary: {summary_file}")
         
-        # Print final summary
         print(f"\n🎉 PROPERLY CALIBRATED FHS ANALYSIS COMPLETE!")
         print(f"📁 Results saved in: {self.output_dir}")
         print(f"\n📊 FINAL VIOLATION RATES:")
